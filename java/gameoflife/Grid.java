@@ -7,6 +7,9 @@ public class Grid {
     private int sizeGrid;
     private Random rd;
     int M = 10, N = 10;
+    private Cell[][] futurCells = new Cell[M][N];
+    private int cmpt;
+
 
     public Grid(int sizeGrid) {
         this.rd = new Random();
@@ -20,8 +23,10 @@ public class Grid {
     }
 
     private void generateRandomInitialState() {
+        // Loop through every cell
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
+                // Random generation at 50/50 chance
                 if((int)Math.random() % 2 == 1){
                     cells[i][j] = new Cell(true);
                 }else{
@@ -33,64 +38,56 @@ public class Grid {
 
 
     public void generateNextState() {
-        // TODO
-    }
-
-    public String toString() {
-        // TODO
-        return "";
-    }
-
-    static void nextGeneration(int grid[][], int M, int N)
-    {
-        int[][] future = new int[M][N];
-
         // Loop through every cell
         for (int l = 1; l < M - 1; l++)
         {
             for (int m = 1; m < N - 1; m++)
             {
                 // finding no Of Neighbours that are alive
-                int aliveNeighbours = 0;
+                int cmpt = 0;
                 for (int i = -1; i <= 1; i++)
-                    for (int j = -1; j <= 1; j++)
-                        aliveNeighbours += grid[l + i][m + j];
+                    for (int j = -1; j <= 1; j++ )
+                        if(cells[l + i][m + j] == new Cell(true))
+                            cmpt += 1;
+
 
                 // The cell needs to be subtracted from
                 // its neighbours as it was counted before
-                aliveNeighbours -= grid[l][m];
-
+                if(cells[l][m] == new Cell(true))
+                    cmpt -= 1;
                 // Implementing the Rules of Life
 
                 // Cell is lonely and dies
-                if ((grid[l][m] == 1) && (aliveNeighbours < 2))
-                    future[l][m] = 0;
+                if ((cells[l][m] == new Cell(true)) && (cmpt < 2))
+                    futurCells[l][m] = new Cell();
 
                     // Cell dies due to over population
-                else if ((grid[l][m] == 1) && (aliveNeighbours > 3))
-                    future[l][m] = 0;
+                else if ((cells[l][m] == new Cell(true)) && (cmpt > 3))
+                    futurCells[l][m] = new Cell();
 
                     // A new cell is born
-                else if ((grid[l][m] == 0) && (aliveNeighbours == 3))
-                    future[l][m] = 1;
+                else if ((cells[l][m] == new Cell()) && (cmpt == 3))
+                    futurCells[l][m] = new Cell(true);
 
                     // Remains the same
                 else
-                    future[l][m] = grid[l][m];
+                    futurCells[l][m] = cells[l][m];
             }
         }
+    }
 
-        System.out.println("Next Generation");
+    public String toString() {
         for (int i = 0; i < M; i++)
         {
             for (int j = 0; j < N; j++)
             {
-                if (future[i][j] == 0)
+                if (futurCells[i][j] ==  new Cell())
                     System.out.print(".");
                 else
-                    System.out.print("*");
+                    System.out.print("X");
             }
             System.out.println();
         }
+        return "";
     }
 }
