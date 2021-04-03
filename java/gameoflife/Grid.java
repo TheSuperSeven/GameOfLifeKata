@@ -47,47 +47,32 @@ public class Grid {
                 int cmpt = 0;
                 for (int i = -1; i <= 1; i++)
                     for (int j = -1; j <= 1; j++ )
-                        if(cells[l + i][m + j] == new Cell(true))
+                        if(cells[l + i][m + j].isAlive() == true)
                             cmpt += 1;
 
 
                 // The cell needs to be subtracted from
                 // its neighbours as it was counted before
-                if(cells[l][m] == new Cell(true))
+                if(cells[l][m].isAlive() == true)
                     cmpt -= 1;
                 // Implementing the Rules of Life
+                futurCells[l][m] = cells[l][m];
+                // Cell dies due to over population or under population
+                if (cells[l][m].isAlive() == true)
+                    futurCells[l][m].setIsAlive(Cell.processState(true, cmpt));
 
-                // Cell is lonely and dies
-                if ((cells[l][m] == new Cell(true)) && (cmpt < 2))
-                    futurCells[l][m] = new Cell();
-
-                    // Cell dies due to over population
-                else if ((cells[l][m] == new Cell(true)) && (cmpt > 3))
-                    futurCells[l][m] = new Cell();
 
                     // A new cell is born
-                else if ((cells[l][m] == new Cell()) && (cmpt == 3))
-                    futurCells[l][m] = new Cell(true);
-
-                    // Remains the same
-                else
-                    futurCells[l][m] = cells[l][m];
+                else if (cells[l][m].isAlive() == false)
+                    futurCells[l][m].setIsAlive(Cell.processState(false, cmpt));
             }
         }
     }
 
     public String toString() {
         for (int i = 0; i < M; i++)
-        {
             for (int j = 0; j < N; j++)
-            {
-                if (futurCells[i][j] ==  new Cell())
-                    System.out.print(".");
-                else
-                    System.out.print("X");
-            }
-            System.out.println();
-        }
+                futurCells[i][j].toString();
         return "";
     }
 }

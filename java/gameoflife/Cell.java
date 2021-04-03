@@ -25,12 +25,11 @@ public class Cell {
 
     static boolean processState(boolean isAlive, int nbNeighbourCellsAlive) {
         // If underpopulated or overpopulated
-        if(isAlive == true && (nbNeighbourCellsAlive < 2 || nbNeighbourCellsAlive > 3 )){
-            return false;
-        }else if(isAlive == false && (nbNeighbourCellsAlive < 2 || nbNeighbourCellsAlive > 3 )){
-            return false;
-        }else{
-            return true;
-        }
+        if(isAlive == true && (nbNeighbourCellsAlive < 2 || nbNeighbourCellsAlive > 3 ))
+            return !isAlive;
+        else if(isAlive == false && (nbNeighbourCellsAlive == 2 || nbNeighbourCellsAlive == 3 ))
+            return !isAlive;
+        else
+            return isAlive;
     }
 }
